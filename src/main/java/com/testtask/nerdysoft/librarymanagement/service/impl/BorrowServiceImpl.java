@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class BorrowServiceImpl implements BorrowService {
@@ -62,11 +63,26 @@ public class BorrowServiceImpl implements BorrowService {
         Borrow borrow = borrowRepository.findById(borrowId)
                 .orElseThrow(() -> new BorrowNotFoundException("Borrow record not found with id: " + borrowId));
 
+        if(borrow.getReturnDate() != null) {
+            throw new IllegalArgumentException("Book has already been returned.");
+        }
+
         Book book = borrow.getBook();
         book.setAmount(book.getAmount() + 1);
         bookService.updateBookById(book.getId(), book);
 
         borrow.setReturnDate(LocalDate.now());
         borrowRepository.save(borrow);
+    }
+
+    @Override
+    public Borrow getBorrowById(Long borrowId) {
+        return borrowRepository.findById(borrowId)
+                .orElseThrow(() -> new BorrowNotFoundException("Borrow not found with id: " + borrowId));
+    }
+
+    @Override
+    public List<Borrow> getAllBorrows() {
+        return borrowRepository.findAll();
     }
 }
