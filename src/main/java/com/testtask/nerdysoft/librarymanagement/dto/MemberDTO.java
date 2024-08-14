@@ -12,5 +12,6 @@ public class MemberDTO {
     private Long id;
     private String name;
     private LocalDate membershipDate;
+    // todo add borrows to dto?
 
 }
