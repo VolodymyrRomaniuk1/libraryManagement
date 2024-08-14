@@ -35,6 +35,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
     }
 
+
+    @ExceptionHandler
+    public ResponseEntity<?> handleIllegalStateExceptionException(IllegalStateException exception) {
+        log.info("IllegalStateException thrown: " + exception.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
+    }
+
     @ExceptionHandler
     public ResponseEntity<?> handleResponseStatusException(ResponseStatusException exception) {
         log.info("ResponseStatusException thrown: " + exception.getMessage());
