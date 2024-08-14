@@ -51,6 +51,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Book updateBookById(Long id, Book updatedBook) {
+        validateBook(updatedBook);
         Book bookToUpdate = getBookById(id);
         bookToUpdate.setTitle(updatedBook.getTitle());
         bookToUpdate.setAuthor(updatedBook.getAuthor());
@@ -61,14 +62,15 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void deleteBook(Long id) {
+    public void deleteBookById(Long id) {
         Book book = getBookById(id);
+        bookRepository.delete(book);
         // todo prevent deletion if book is borrowed
-        if (book.getAmount() == 0) {
-            bookRepository.delete(book);
-        } else {
-            throw new IllegalStateException("Cannot delete book that is currently borrowed.");
-        }
+//        if (book.getAmount() > 0) {
+//            bookRepository.delete(book);
+//        } else {
+//            throw new IllegalStateException("Cannot delete book that is currently borrowed.");
+//        }
     }
 
     private void validateBook(Book book) {

@@ -8,6 +8,6 @@ public interface MemberService {
     public Member addMember(Member member);
     public Member getMemberById(Long id);
     public List<Member> getAllMembers();
-    public Member updateMember(Long id, Member updatedMember);
-    public void deleteMember(Long id);
+    public Member updateMemberById(Long id, Member updatedMember);
+    public void deleteMemberById(Long id);
 }

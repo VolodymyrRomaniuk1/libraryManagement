@@ -9,5 +9,5 @@ public interface BookService {
     public Book getBookById(Long id);
     public List<Book> getAllBooks();
     public Book updateBookById(Long id, Book updatedBook);
-    public void deleteBook(Long id);
+    public void deleteBookById(Long id);
 }

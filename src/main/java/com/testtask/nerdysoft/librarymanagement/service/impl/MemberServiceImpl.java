@@ -49,7 +49,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public Member updateMember(Long id, Member updatedMember) {
+    public Member updateMemberById(Long id, Member updatedMember) {
         validateMember(updatedMember);
         Member existingMember = getMemberById(id);
         existingMember.setName(updatedMember.getName());
@@ -57,7 +57,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public void deleteMember(Long id) {
+    public void deleteMemberById(Long id) {
         Member member = getMemberById(id);
         if (member.getBorrows().stream().noneMatch(b -> b.getReturnDate() == null)) {
             memberRepository.delete(member);
