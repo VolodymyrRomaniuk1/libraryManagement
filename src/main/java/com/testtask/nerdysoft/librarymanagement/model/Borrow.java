@@ -28,6 +28,4 @@ public class Borrow {
     private Book book;
 
     private LocalDate borrowDate;
-
-    private LocalDate returnDate;
 }

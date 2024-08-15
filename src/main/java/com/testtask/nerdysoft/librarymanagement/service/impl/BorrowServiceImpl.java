@@ -38,7 +38,7 @@ public class BorrowServiceImpl implements BorrowService {
         Member member = memberService.getMemberById(memberId);
         Book book = bookService.getBookById(bookId);
 
-        if (member.getBorrows().stream().filter(b -> b.getReturnDate() == null).count() >= maxBooksPerMember) {
+        if (member.getBorrows().size() >= maxBooksPerMember) {
             throw new IllegalStateException("Member has reached the maximum number of borrowed books.");
         }
 
@@ -63,16 +63,11 @@ public class BorrowServiceImpl implements BorrowService {
         Borrow borrow = borrowRepository.findById(borrowId)
                 .orElseThrow(() -> new BorrowNotFoundException("Borrow record not found with id: " + borrowId));
 
-        if(borrow.getReturnDate() != null) {
-            throw new IllegalArgumentException("Book has already been returned.");
-        }
-
         Book book = borrow.getBook();
         book.setAmount(book.getAmount() + 1);
         bookService.updateBookById(book.getId(), book);
 
-        borrow.setReturnDate(LocalDate.now());
-        borrowRepository.save(borrow);
+        borrowRepository.delete(borrow);
     }
 
     @Override

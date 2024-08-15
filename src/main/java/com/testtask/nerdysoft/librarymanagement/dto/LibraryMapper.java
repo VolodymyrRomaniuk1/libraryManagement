@@ -42,7 +42,6 @@ public interface LibraryMapper {
     @Mapping(source = "member.id", target = "memberId")
     @Mapping(source = "book.id", target = "bookId")
     @Mapping(source = "borrowDate", target = "borrowDate")
-    @Mapping(source = "returnDate", target = "returnDate")
     BorrowDTO borrowToBorrowDTO(Borrow borrow);
 
     // Mapping for BorrowDTO to Borrow entity
@@ -50,10 +49,8 @@ public interface LibraryMapper {
     @Mapping(source = "memberId", target = "member")
     @Mapping(source = "bookId", target = "book")
     @Mapping(source = "borrowDate", target = "borrowDate")
-    @Mapping(source = "returnDate", target = "returnDate")
     Borrow borrowDTOToBorrow(BorrowDTO borrowDTO);
 
-    // Method to map memberId to Member
     default Member mapMemberIdToMember(Long memberId) {
         if (memberId == null) {
             return null;
@@ -63,7 +60,6 @@ public interface LibraryMapper {
         return member;
     }
 
-    // Method to map bookId to Book
     default Book mapBookIdToBook(Long bookId) {
         if (bookId == null) {
             return null;
@@ -73,7 +69,6 @@ public interface LibraryMapper {
         return book;
     }
 
-    // Method to map Member to memberId
     default Long mapMemberToMemberId(Member member) {
         if (member == null) {
             return null;
@@ -81,7 +76,6 @@ public interface LibraryMapper {
         return member.getId();
     }
 
-    // Method to map Book to bookId
     default Long mapBookToBookId(Book book) {
         if (book == null) {
             return null;

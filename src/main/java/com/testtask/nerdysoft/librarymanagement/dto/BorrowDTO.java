@@ -13,5 +13,4 @@ public class BorrowDTO {
     private Long memberId;
     private Long bookId;
     private LocalDate borrowDate;
-    private LocalDate returnDate;
 }

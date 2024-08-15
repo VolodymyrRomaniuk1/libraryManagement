@@ -59,7 +59,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public void deleteMemberById(Long id) {
         Member member = getMemberById(id);
-        if (member.getBorrows().stream().noneMatch(b -> b.getReturnDate() == null)) {
+        if (member.getBorrows().isEmpty()) {
             memberRepository.delete(member);
         } else {
             throw new IllegalStateException("Cannot delete Member with borrowed books.");
