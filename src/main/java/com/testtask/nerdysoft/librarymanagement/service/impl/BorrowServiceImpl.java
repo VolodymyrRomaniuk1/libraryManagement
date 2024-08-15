@@ -1,5 +1,6 @@
 package com.testtask.nerdysoft.librarymanagement.service.impl;
 
+import com.testtask.nerdysoft.librarymanagement.dto.BookSummaryDTO;
 import com.testtask.nerdysoft.librarymanagement.exception.BorrowNotFoundException;
 import com.testtask.nerdysoft.librarymanagement.model.Book;
 import com.testtask.nerdysoft.librarymanagement.model.Borrow;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class BorrowServiceImpl implements BorrowService {
@@ -79,5 +81,25 @@ public class BorrowServiceImpl implements BorrowService {
     @Override
     public List<Borrow> getAllBorrows() {
         return borrowRepository.findAll();
+    }
+
+    @Override
+    public List<Book> getBooksBorrowedByMemberId(Long id) {
+        Member member = memberService.getMemberById(id);
+
+        List<Borrow> borrows = borrowRepository.findByMember(member);
+        return borrows.stream()
+                .map(Borrow::getBook)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<String> getDistinctBorrowedBookNames() {
+        return borrowRepository.findDistinctBookNames();
+    }
+
+    @Override
+    public List<BookSummaryDTO> getBorrowedBookSummary() {
+        return borrowRepository.findBorrowedBookSummary();
     }
 }

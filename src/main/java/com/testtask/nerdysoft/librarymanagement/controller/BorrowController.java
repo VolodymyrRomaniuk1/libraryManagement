@@ -1,7 +1,10 @@
 package com.testtask.nerdysoft.librarymanagement.controller;
 
+import com.testtask.nerdysoft.librarymanagement.dto.BookDTO;
+import com.testtask.nerdysoft.librarymanagement.dto.BookSummaryDTO;
 import com.testtask.nerdysoft.librarymanagement.dto.BorrowDTO;
 import com.testtask.nerdysoft.librarymanagement.dto.LibraryMapper;
+import com.testtask.nerdysoft.librarymanagement.model.Book;
 import com.testtask.nerdysoft.librarymanagement.model.Borrow;
 import com.testtask.nerdysoft.librarymanagement.service.BorrowService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,4 +51,21 @@ public class BorrowController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/member/{id}")
+    public ResponseEntity<List<BookDTO>> getBooksBorrowedByMember(@PathVariable Long id) {
+        List<Book> books = borrowService.getBooksBorrowedByMemberId(id);
+        return ResponseEntity.ok(books.stream().map(libraryMapper::bookToBookDTO).collect(Collectors.toList()));
+    }
+
+    @GetMapping("/distinct-books")
+    public ResponseEntity<List<String>> getDistinctBorrowedBookNames() {
+        List<String> bookNames = borrowService.getDistinctBorrowedBookNames();
+        return ResponseEntity.ok(bookNames);
+    }
+
+    @GetMapping("/book-summary")
+    public ResponseEntity<List<BookSummaryDTO>> getBorrowedBookSummary() {
+        List<BookSummaryDTO> bookSummaries = borrowService.getBorrowedBookSummary();
+        return ResponseEntity.ok(bookSummaries);
+    }
 }
