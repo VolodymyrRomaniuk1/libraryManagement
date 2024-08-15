@@ -3,6 +3,7 @@ package com.testtask.nerdysoft.librarymanagement.service.impl;
 import com.testtask.nerdysoft.librarymanagement.exception.BookNotFoundException;
 import com.testtask.nerdysoft.librarymanagement.model.Book;
 import com.testtask.nerdysoft.librarymanagement.repository.BookRepository;
+import com.testtask.nerdysoft.librarymanagement.repository.BorrowRepository;
 import com.testtask.nerdysoft.librarymanagement.service.BookService;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
@@ -17,11 +18,13 @@ import java.util.Set;
 public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;
+    private final BorrowRepository borrowRepository;
     private final Validator validator;
 
     @Autowired
-    public BookServiceImpl(BookRepository bookRepository, Validator validator) {
+    public BookServiceImpl(BookRepository bookRepository, BorrowRepository borrowRepository, Validator validator) {
         this.bookRepository = bookRepository;
+        this.borrowRepository = borrowRepository;
         this.validator = validator;
     }
 
@@ -31,7 +34,11 @@ public class BookServiceImpl implements BookService {
         Optional<Book> existingBook = bookRepository.findByTitleAndAuthor(book.getTitle(), book.getAuthor());
         if (existingBook.isPresent()) {
             Book bookToUpdate = existingBook.get();
-            bookToUpdate.setAmount(bookToUpdate.getAmount() + 1);
+            if (book.getAmount() >= 1) {
+                bookToUpdate.setAmount(bookToUpdate.getAmount() + book.getAmount());
+            } else {
+                bookToUpdate.setAmount(bookToUpdate.getAmount() + 1);
+            }
             return bookRepository.save(bookToUpdate);
         } else {
             return bookRepository.save(book);
@@ -53,24 +60,29 @@ public class BookServiceImpl implements BookService {
     public Book updateBookById(Long id, Book updatedBook) {
         validateBook(updatedBook);
         Book bookToUpdate = getBookById(id);
+
+        boolean isDuplicate = bookRepository.existsByTitleAndAuthorAndIdNot(updatedBook.getTitle(), updatedBook.getAuthor(), id);
+        if (isDuplicate) {
+            throw new IllegalStateException("Another Book with title \"" + updatedBook.getTitle() + "\" and author \"" + updatedBook.getAuthor() + "\" already exists");
+        }
+
         bookToUpdate.setTitle(updatedBook.getTitle());
         bookToUpdate.setAuthor(updatedBook.getAuthor());
         bookToUpdate.setAmount(updatedBook.getAmount());
-        Optional<Book> existingBook = bookRepository.findByTitleAndAuthor(bookToUpdate.getTitle(), bookToUpdate.getAuthor());
-        // todo deletion of the entry while its id is being referenced somewhere
+
         return bookRepository.save(bookToUpdate);
     }
 
     @Override
     public void deleteBookById(Long id) {
+        boolean isBookBorrowed = borrowRepository.existsByBookId(id);
+
+        if (isBookBorrowed) {
+            throw new IllegalStateException("Book cannot be deleted as it is currently borrowed.");
+        }
+
         Book book = getBookById(id);
         bookRepository.delete(book);
-        // todo prevent deletion if book is borrowed
-//        if (book.getAmount() > 0) {
-//            bookRepository.delete(book);
-//        } else {
-//            throw new IllegalStateException("Cannot delete book that is currently borrowed.");
-//        }
     }
 
     private void validateBook(Book book) {
