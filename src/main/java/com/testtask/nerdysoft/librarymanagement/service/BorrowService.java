@@ -5,8 +5,8 @@ import com.testtask.nerdysoft.librarymanagement.model.Borrow;
 import java.util.List;
 
 public interface BorrowService {
-    public Borrow borrowBook(Long memberId, Long bookId);
-    public void returnBook(Long borrowId);
-    public Borrow getBorrowById(Long borrowId);
-    public List<Borrow> getAllBorrows();
+    Borrow borrowBook(Long memberId, Long bookId);
+    void returnBook(Long borrowId);
+    Borrow getBorrowById(Long borrowId);
+    List<Borrow> getAllBorrows();
 }

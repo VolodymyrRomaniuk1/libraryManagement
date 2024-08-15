@@ -5,9 +5,9 @@ import com.testtask.nerdysoft.librarymanagement.model.Member;
 import java.util.List;
 
 public interface MemberService {
-    public Member addMember(Member member);
-    public Member getMemberById(Long id);
-    public List<Member> getAllMembers();
-    public Member updateMemberById(Long id, Member updatedMember);
-    public void deleteMemberById(Long id);
+    Member addMember(Member member);
+    Member getMemberById(Long id);
+    List<Member> getAllMembers();
+    Member updateMemberById(Long id, Member updatedMember);
+    void deleteMemberById(Long id);
 }

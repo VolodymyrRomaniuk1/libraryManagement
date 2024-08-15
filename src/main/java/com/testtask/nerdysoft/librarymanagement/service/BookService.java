@@ -5,9 +5,9 @@ import com.testtask.nerdysoft.librarymanagement.model.Book;
 import java.util.List;
 
 public interface BookService {
-    public Book addBook(Book book);
-    public Book getBookById(Long id);
-    public List<Book> getAllBooks();
-    public Book updateBookById(Long id, Book updatedBook);
-    public void deleteBookById(Long id);
+    Book addBook(Book book);
+    Book getBookById(Long id);
+    List<Book> getAllBooks();
+    Book updateBookById(Long id, Book updatedBook);
+    void deleteBookById(Long id);
 }
